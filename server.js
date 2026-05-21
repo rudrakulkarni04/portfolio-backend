@@ -11,10 +11,6 @@ app.use(express.json());
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-app.get('/', (req, res) => {
-    res.send('Backend is running 🚀');
-});
-
 app.post('/send-mail', async (req, res) => {
     try {
         const { name, email, subject, message } = req.body;
@@ -24,8 +20,8 @@ app.post('/send-mail', async (req, res) => {
         }
 
         const response = await resend.emails.send({
-            from: 'Portfolio <onboarding@resend.dev>',
-            to: process.env.RECEIVER_EMAIL,
+            from: 'Portfolio <onboarding@resend.dev>', // OK for testing
+            to: [process.env.RECEIVER_EMAIL],
             subject: subject || 'New Contact Form Message',
             html: `
                 <h2>New Message from Portfolio</h2>
@@ -35,14 +31,19 @@ app.post('/send-mail', async (req, res) => {
             `
         });
 
-        res.json({ success: true, response });
+        console.log("Resend Response:", response);
+
+        return res.json({
+            success: true,
+            message: "Email sent (check spam too)",
+            response
+        });
 
     } catch (error) {
         console.error('❌ Resend Error:', error);
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({
+            error: error.message
+        });
     }
-});
-
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log("EMAIL RESPONSE:", JSON.stringify(response, null, 2));
 });
