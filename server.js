@@ -53,6 +53,7 @@ app.post('/send-mail', async (req, res) => {
         const response = await resend.emails.send({
             from: 'Portfolio <onboarding@resend.dev>',
             to: process.env.RECEIVER_EMAIL,
+            reply_to: email,
             subject: subject || 'New Portfolio Contact Message',
             html: `
                 <h2>📩 New Message from Portfolio</h2>
