@@ -39,8 +39,8 @@ app.post('/send-mail', async (req, res) => {
         }
 
         const data = await resend.emails.send({
-            from: 'onboarding@resend.dev',   // ✅ FIX HERE
             to: process.env.RECEIVER_EMAIL,
+           from: "Portfolio <onboarding@resend.dev>",  // ✅ FIX HERE
             reply_to: email,
             subject: subject || "New Portfolio Message",
             html: `
